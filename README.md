@@ -154,6 +154,29 @@ The site is fully responsive with:
 - Drawer navigation for mobile
 - Responsive grid layouts (1-4 columns based on screen size)
 
+## Deployment (Git on server)
+
+Deploy does **not** upload a local tarball. It SSHs to the server, uploads a small `scripts/deploy-git.sh` bootstrap, then **clones or pulls** the repo and runs `scripts/deploy-remote.sh` (install Node/PM2 if needed, `npm ci`, Prisma, `npm run build`, PM2).
+
+From your machine (repo root):
+
+```bash
+.\scripts\deploy.ps1
+```
+
+Environment (optional):
+
+| Variable | Default |
+|----------|---------|
+| `DEPLOY_HOST` | `ubuntu@43.133.43.126` |
+| `DEPLOY_PATH` | `/home/ubuntu/breedytech` |
+| `DEPLOY_REPO_URL` | `git remote get-url origin` |
+| `DEPLOY_BRANCH` | `main` |
+
+**Private repos:** use an SSH remote (`git@github.com:org/repo.git`) and add a deploy key on the server, or set `DEPLOY_REPO_URL` to an HTTPS URL with a token. Ensure the server has a production `.env` (or let `deploy-remote.sh` copy `env.production.example` once).
+
+See also `DEPLOY.md` (中文说明).
+
 ## License
 
 MIT
