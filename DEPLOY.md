@@ -42,6 +42,19 @@ $env:DEPLOY_REPO_URL = "git@github.com:your-org/breedytech.git"
 
 生产环境请在服务器 `DEPLOY_PATH` 下配置 `.env`。若不存在，首次部署会从 `env.production.example` 复制一份，请务必修改 `SESSION_SECRET` 等敏感项。
 
+### SQLite `DATABASE_URL`（重要）
+
+Prisma 将 SQLite 路径**相对于 `prisma/schema.prisma` 所在目录**解析：
+
+| 写法 | 实际文件 |
+|------|----------|
+| `file:./dev.db` | `prisma/dev.db`（正确，与仓库中提交的数据库一致） |
+| `file:./prisma/dev.db` | `prisma/prisma/dev.db`（错误，应用会连到另一份库，**商品可能为空**） |
+
+部署脚本会自动把错误的 `file:./prisma/dev.db` 改回 `file:./dev.db`。若你曾手动改过 `.env`，请核对。
+
+部署时会执行 **`prisma db seed`**（幂等 upsert），保证至少有种子商品与管理员账号。
+
 ## 端口与 Nginx
 
 部署完成后：

@@ -5,6 +5,15 @@ export NODE_ENV=production
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
+# Prisma SQLite 的相对路径相对于 prisma/schema.prisma 所在目录。
+# file:./prisma/dev.db 会解析成 prisma/prisma/dev.db，与仓库中的 prisma/dev.db 不一致，线上会看不到商品。
+if [[ -f .env ]]; then
+  if grep -qE '^DATABASE_URL="file:\./prisma/dev\.db"' .env; then
+    sed -i 's|^DATABASE_URL="file:\./prisma/dev\.db"|DATABASE_URL="file:./dev.db"|' .env
+    echo "[deploy-remote] fixed DATABASE_URL -> file:./dev.db (was file:./prisma/dev.db)"
+  fi
+fi
+
 if [[ ! -f .env ]]; then
   if [[ -f env.production.example ]]; then
     cp env.production.example .env
@@ -30,6 +39,7 @@ fi
 npm ci
 npx prisma migrate deploy
 npx prisma generate
+npx prisma db seed
 npm run build
 
 pm2 delete breedytech 2>/dev/null || true
