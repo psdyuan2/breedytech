@@ -39,7 +39,7 @@ fi
 npm ci
 npx prisma migrate deploy
 npx prisma generate
-npx prisma db seed
+npm run db:seed
 npm run build
 
 pm2 delete breedytech 2>/dev/null || true
