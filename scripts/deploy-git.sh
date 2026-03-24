@@ -20,11 +20,12 @@ if [[ ! -d "$DEST/.git" ]]; then
   mkdir -p "$(dirname "$DEST")"
   git clone -b "$BRANCH" "$REPO_URL" "$DEST"
 else
-  echo "[deploy-git] pulling $BRANCH in $DEST"
+  echo "[deploy-git] syncing $BRANCH in $DEST (reset to origin)"
   cd "$DEST"
   git fetch origin
   git checkout "$BRANCH"
-  git pull --ff-only origin "$BRANCH"
+  # Match remote exactly; avoids merge failures when the server had local edits
+  git reset --hard "origin/$BRANCH"
 fi
 
 cd "$DEST"
