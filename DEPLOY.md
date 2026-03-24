@@ -42,6 +42,13 @@ $env:DEPLOY_REPO_URL = "git@github.com:your-org/breedytech.git"
 
 生产环境请在服务器 `DEPLOY_PATH` 下配置 `.env`。若不存在，首次部署会从 `env.production.example` 复制一份，请务必修改 `SESSION_SECRET` 等敏感项。
 
-## 端口
+## 端口与 Nginx
 
-默认 Next.js `npm start` 监听 **3000**。若需公网访问，请在服务器上配置安全组/防火墙，并用 Nginx/Caddy 反代或 `pm2` 绑定等按需调整。
+部署完成后：
+
+- **Next.js（PM2）** 只监听 **`127.0.0.1:3000`**（不直接对公网暴露）。
+- **Nginx** 监听 **80**，按 `deploy/nginx-breedytech.conf` 反代到上述地址。
+
+公网访问请在云安全组/防火墙 **放行 TCP 80**（若仍只放行 3000，请改为放行 80 或同时放行）。
+
+后续若要 HTTPS，可在 Nginx 上配置证书（如 Let’s Encrypt）并增加 443 `server` 块。

@@ -156,7 +156,7 @@ The site is fully responsive with:
 
 ## Deployment (Git on server)
 
-Deploy does **not** upload a local tarball. It SSHs to the server, uploads a small `scripts/deploy-git.sh` bootstrap, then **clones or pulls** the repo and runs `scripts/deploy-remote.sh` (install Node/PM2 if needed, `npm ci`, Prisma, `npm run build`, PM2).
+Deploy does **not** upload a local tarball. It SSHs to the server, uploads a small `scripts/deploy-git.sh` bootstrap, then **clones or pulls** the repo and runs `scripts/deploy-remote.sh` (install Node/PM2/Nginx if needed, `npm ci`, Prisma, `npm run build`, PM2 on `127.0.0.1:3000`, **Nginx on port 80** reverse-proxying to that socket — see `deploy/nginx-breedytech.conf`).
 
 From your machine (repo root):
 

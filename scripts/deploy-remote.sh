@@ -33,8 +33,25 @@ npx prisma generate
 npm run build
 
 pm2 delete breedytech 2>/dev/null || true
-pm2 start npm --name breedytech -- start
+# Bind app to loopback so only Nginx is exposed on :80
+pm2 start npm --name breedytech -- start -- -H 127.0.0.1 -p 3000
 pm2 save
 
-echo "[deploy-remote] done."
+if ! command -v nginx >/dev/null 2>&1; then
+  echo "[deploy-remote] installing nginx..."
+  sudo apt-get update -qq
+  sudo apt-get install -y nginx
+fi
+
+NGINX_SITE="breedytech"
+sudo cp "$ROOT/deploy/nginx-breedytech.conf" "/etc/nginx/sites-available/${NGINX_SITE}"
+sudo ln -sf "/etc/nginx/sites-available/${NGINX_SITE}" "/etc/nginx/sites-enabled/${NGINX_SITE}"
+if [[ -L /etc/nginx/sites-enabled/default ]]; then
+  sudo rm -f /etc/nginx/sites-enabled/default
+fi
+sudo nginx -t
+sudo systemctl enable nginx
+sudo systemctl reload nginx
+
+echo "[deploy-remote] done. Nginx :80 -> http://127.0.0.1:3000"
 pm2 status breedytech
