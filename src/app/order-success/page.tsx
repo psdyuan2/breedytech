@@ -1,15 +1,16 @@
 'use client';
 
 import * as React from 'react';
+import { Suspense } from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useRouter, useSearchParams } from 'next/navigation';
 import StorefrontLayout from '@/components/StorefrontLayout';
 
-export default function OrderSuccessPage() {
+function OrderSuccessContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const orderNumber = searchParams.get('orderNumber');
@@ -37,5 +38,23 @@ export default function OrderSuccessPage() {
         </Button>
       </Container>
     </StorefrontLayout>
+  );
+}
+
+function OrderSuccessFallback() {
+  return (
+    <StorefrontLayout>
+      <Container maxWidth="sm" sx={{ py: 8, textAlign: 'center' }}>
+        <CircularProgress />
+      </Container>
+    </StorefrontLayout>
+  );
+}
+
+export default function OrderSuccessPage() {
+  return (
+    <Suspense fallback={<OrderSuccessFallback />}>
+      <OrderSuccessContent />
+    </Suspense>
   );
 }
