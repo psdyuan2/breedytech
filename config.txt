@@ -1,0 +1,9 @@
+DATABASE_URL="file:./dev.db"
+SESSION_SECRET="replace-with-32-char-min-hex-secret-key-change-me-ok"
+ADMIN_SEED_PASSWORD="admin123"
+
+# 远程服务器参数
+remote_server_ip="43.133.43.126"
+remote_server_username="ubuntu"
+remote_server_password="yNd=8W2/9HR!4x"
+remote_server_port=22
