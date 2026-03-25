@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import ThemeRegistry from "@/theme/ThemeRegistry";
 import { CartProvider } from "@/components/CartProvider";
 import { SITE_NAME } from "@/lib/constants";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: `${SITE_NAME} - Quality Gear for India`,
