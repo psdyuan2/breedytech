@@ -46,6 +46,7 @@ export default function HomeContent({ products }: { products: Product[] }) {
             bottom: 0,
             backgroundColor: 'rgba(0, 0, 0, 0.4)',
             zIndex: 1,
+            pointerEvents: 'none',
           },
         }}
       >
